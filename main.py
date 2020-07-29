@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from Tkinter import *
-from tkFileDialog import asksaveasfilename,askopenfilename
-import tkMessageBox
-import tkFont
-import ttk  # Python27
+from tkinter import filedialog
+from tkinter import *
+from tkinter import messagebox
+#import tkFont
+from tkinter import ttk  
 
 from produtos import *
 from EANBarCode import *
@@ -65,10 +65,10 @@ class JanelaCodUp:
             self.janela = Toplevel()
             self.janela.title("Vincular Cod. de Barras")
             self.janela.resizable(FALSE,FALSE)
-            self.janela.protocol("WM_DELETE_WINDOW",self.FechaJanela)  # Colocando a função de fechar a janela
+            self.janela.protocol("WM_DELETE_WINDOW",self.FechaJanela)  # Colocando a funï¿½ï¿½o de fechar a janela
             self.Forca_Focus()
             
-            # Pegando posição da janela raiz e da toplevel
+            # Pegando posiï¿½ï¿½o da janela raiz e da toplevel
             #possjnEtiq =  self.jnEtiquetas.geometry().split('+')
             possRaiz = raiz.geometry().split('+')       
             possjnEtiquetas = str("650x320") + "+" + str(possRaiz[1]) + "+" + str(int(possRaiz[-1])+int(possRaiz[0].split('x')[1])+50)
@@ -111,7 +111,7 @@ class JanelaCodUp:
             # Criando labels para total de paginas
             Label(self.janela, text="Total de Itens", font=("Helvetica", 10)).grid(row=12, column=0, sticky=W)
             Label(self.janela, text="Novos Cadastros ", font=("Helvetica", 10)).grid(row=12, column=1, sticky=W)
-            Label(self.janela, text="Produtos já Cadastrados ", font=("Helvetica", 10)).grid(row=12, column=2, sticky=W)
+            Label(self.janela, text="Produtos jï¿½ Cadastrados ", font=("Helvetica", 10)).grid(row=12, column=2, sticky=W)
             Label(self.janela, text="Total de Produtos contado ", font=("Helvetica", 10)).grid(row=12, column=3, sticky=W)
             
             
@@ -176,7 +176,7 @@ class JanelaCodUp:
         """
         
         sql = "UPDATE ACADPROD SET CODBARRAS = '" + codbarras + "' WHERE COD_PRODUTO = '" + codproduto + "'"
-        print sql
+        print (sql)
         #SELECT a.COD_PRODUTO, a.DESCRICAO, a.CODBARRAS FROM ACADPROD a
         self.cur.execute(sql)
         self.con.commit()
@@ -186,7 +186,7 @@ class JanelaCodUp:
         # Coloca dados na tabela
         #print "Tamanho", len(listaProdutos)
         if listaProdutos == []:
-            print "Lista Vazia"
+            print ("Lista Vazia")
             self.labelTotEtiq.set("0")
             self.labelTotPag.set("0")
             #######TODO:XXX Aqui
@@ -239,12 +239,12 @@ class JanelaCodUp:
         treeV.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
         treeV.grid(column=numcolunas, row=numlinhas, sticky='nsew')
         
-        # a possição da barra de rolagem recebe a possição inicial do grid + o seu tamanho mais 1
+        # a possiï¿½ï¿½o da barra de rolagem recebe a possiï¿½ï¿½o inicial do grid + o seu tamanho mais 1
         # Tanto para a linha como para a coluna
         vsb.grid(column=pcolum, row=numlinhas, sticky='ns', rowspan=rowspan)
         hsb.grid(column=numcolunas, row=plinhas, sticky='ew', columnspan=columnspan)
         
-        # Coloca titulos nas colunas, falta criar funçao de ordenação
+        # Coloca titulos nas colunas, falta criar funï¿½ao de ordenaï¿½ï¿½o
         for col in colunas:
                 treeV.heading(col, text=col.title(),
                     command=lambda c=col: self.sortby(treeV, c, 0))
@@ -257,7 +257,7 @@ class JanelaCodUp:
         
     def Conecta(self):
         """
-        Abre a conexão com o banco de dados
+        Abre a conexï¿½o com o banco de dados
         """
         self.con = kinterbasdb.connect(host="10.1.1.10",
                                    database='C:\SIACPlus\siacCX.fdb',
@@ -265,7 +265,7 @@ class JanelaCodUp:
                                    password="masterkey",
                                    charset="ISO8859_1"
                                    )
-        print "Conexão aberta"
+        print ("Conexï¿½o aberta")
         self.cur = self.con.cursor()
         
     def Enviar(self):
@@ -273,7 +273,7 @@ class JanelaCodUp:
         Enviar dados para o banco
         """
         
-        if tkMessageBox.askokcancel("Enviar para o Banco?", "Você tem certeza que deseja atualizar estes codigos de barras?"):
+        if tkMessageBox.askokcancel("Enviar para o Banco?", "Vocï¿½ tem certeza que deseja atualizar estes codigos de barras?"):
             # Acessando o Banco
             self.Conecta()
             
@@ -282,7 +282,7 @@ class JanelaCodUp:
                     self.AlteraCodBarrasBanco(str(prod.cod_produto), str(prod.cod_barras))
                     #print prod.cod_produto
             
-            # Fechando a conexão com o banco
+            # Fechando a conexï¿½o com o banco
             self.FechaConexao()
             mesg = str(self.produtosLido.ContaItens()) + " Codigos de Barras Atualizados com sucesso!"
             tkMessageBox.showinfo(
@@ -295,10 +295,10 @@ class JanelaCodUp:
         """
         Gerencia os eventos do teclado na treeview
         """
-        print "Evento do teclado: ", event.keycode
+        print ("Evento do teclado: ", event.keycode)
         if event.widget._name == "treeview":
             if event.keycode != 40 and event.keycode != 38:
-                # Forçando o focus na descricao
+                # Forï¿½ando o focus na descricao
                 
                 if event.keycode != 13:
                 
@@ -310,17 +310,17 @@ class JanelaCodUp:
                 
     def FechaConexao(self):
         """
-        Fecha a conexão com o banco de dados
+        Fecha a conexï¿½o com o banco de dados
         """
         # Fechando acesso ao banco                
         self.con.close()
-        print "Conexão fechada"
+        print ("Conexï¿½o fechada")
     
     def FechaJanela(self):
         """
         Fecha a janela principal
         """
-        if tkMessageBox.askokcancel("Exit?", "Você tem certeza que deseja fechar?"):
+        if tkMessageBox.askokcancel("Exit?", "Vocï¿½ tem certeza que deseja fechar?"):
             self.janela.destroy()
             self.janela = None
         else:
@@ -334,13 +334,13 @@ class JanelaCodUp:
             
     def Forca_Focus(self, event=None):
         """
-        Força o focus na janela etiquetas
+        Forï¿½a o focus na janela etiquetas
         """
         
         if event is None :
             self.janela.focus_set()
         else:
-            print "Evento ", event.widget._name
+            print ("Evento ", event.widget._name)
             
     def SelecionaProduto(self, event):
         """
@@ -375,13 +375,13 @@ class Listas:
         
         # Criando Janela TopLevel
         self.janelaetiquetas = Toplevel()
-        self.janelaetiquetas.title("Impressão de Lista de Produtos")
+        self.janelaetiquetas.title("Impressï¿½o de Lista de Produtos")
         #self.janelaetiquetas.resizable(FALSE,FALSE)
-        self.janelaetiquetas.protocol("WM_DELETE_WINDOW",self.FechaJanela)  # Colocando a função de fechar a janela
+        self.janelaetiquetas.protocol("WM_DELETE_WINDOW",self.FechaJanela)  # Colocando a funï¿½ï¿½o de fechar a janela
         #self.janelaetiquetas.focus_set()
         self.Forca_Focus()
         
-        # Pegando posição da janela raiz e da toplevel
+        # Pegando posiï¿½ï¿½o da janela raiz e da toplevel
         #possjnEtiq =  self.jnEtiquetas.geometry().split('+')
         possRaiz = self.janelaraiz.geometry().split('+')       
         possjnEtiquetas = str("866x666") + "+" + str(possRaiz[1]) + "+" + str(int(possRaiz[-1])+int(possRaiz[0].split('x')[1])+50)
@@ -416,8 +416,8 @@ class Listas:
         # Setando o evento do teclado para a descricao, quando qualwuer tecla for presionada chamda filtraProdutos
         self.jnetcodproduto.bind("<KeyRelease>", self.filtraProdutos)
         
-        # Descricão
-        Label(self.janelaetiquetas, text="Descrição").grid(row=2, column=2)
+        # Descricï¿½o
+        Label(self.janelaetiquetas, text="Descriï¿½ï¿½o").grid(row=2, column=2)
         self.jnetdescricao = Entry(self.janelaetiquetas, name="jnetdescricao")
         self.jnetdescricao["width"] = 50
         self.jnetdescricao.grid(row=2, column=3)
@@ -494,7 +494,7 @@ class Listas:
         # Row 27
         frame = ttk.Frame(self.janelaetiquetas, borderwidth=5, relief="groove")
         frame.grid(column=1, row=27, columnspan=3, stick=W)
-        Label(frame, text="Selecione os item que aparecerão na lista",font=("Helvetica", 12)).grid(row=0, column=0, columnspan=4)
+        Label(frame, text="Selecione os item que aparecerï¿½o na lista",font=("Helvetica", 12)).grid(row=0, column=0, columnspan=4)
         
         self.opcoes = []
         self.opcoes.append(StringVar())
@@ -549,7 +549,7 @@ class Listas:
         self.opcoes[-1].set("Off")        
         
         Checkbutton(
-            frame2, text="Itens não cadastrados", variable=self.opcoes[-1],
+            frame2, text="Itens nï¿½o cadastrados", variable=self.opcoes[-1],
             onvalue="New", offvalue="Off"
             ).grid(row=1, column=0, stick=W)
         
@@ -587,7 +587,7 @@ class Listas:
         # Coloca dados na tabela
         #print "Tamanho", len(listaProdutos)
         if listaProdutos == []:
-            print "Lista Vazia"
+            print ("Lista Vazia")
             self.labelTotEtiq.set("0")
             self.labelTotPag.set("0")
             #######TODO:XXX Aqui
@@ -617,7 +617,7 @@ class Listas:
         item = self.jnettreeview2.item(self.jnettreeview2.selection())
         
         valores = item.values()
-        # Verifica se dados não estão vazio
+        # Verifica se dados nï¿½o estï¿½o vazio
         if valores[2] != '':
             novoValor = (valores[2][0], valores[2][1], valores[2][2], valores[2][3])
             self.alteraqtdproduto.set(
@@ -679,12 +679,12 @@ class Listas:
         treeV.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
         treeV.grid(column=numcolunas, row=numlinhas, sticky='nsew')
         
-        # a possição da barra de rolagem recebe a possição inicial do grid + o seu tamanho mais 1
+        # a possiï¿½ï¿½o da barra de rolagem recebe a possiï¿½ï¿½o inicial do grid + o seu tamanho mais 1
         # Tanto para a linha como para a coluna
         vsb.grid(column=pcolum, row=numlinhas, sticky='ns', rowspan=rowspan)
         hsb.grid(column=numcolunas, row=plinhas, sticky='ew', columnspan=columnspan)
         
-        # Coloca titulos nas colunas, falta criar funçao de ordenação
+        # Coloca titulos nas colunas, falta criar funï¿½ao de ordenaï¿½ï¿½o
         for col in colunas:
                 treeV.heading(col, text=col.title(),
                     command=lambda c=col: self.sortby(treeV, c, 0))
@@ -699,10 +699,10 @@ class Listas:
         """
         Gerencia os eventos do teclado na treeview
         """
-        print "Evento do teclado: ", event.keycode
+        print ("Evento do teclado: ", event.keycode)
         if event.widget._name == "treeview":
             if event.keycode != 40 and event.keycode != 38:
-                # Forçando o focus na descricao
+                # Forï¿½ando o focus na descricao
                 
                 if event.keycode != 13:
                 
@@ -715,13 +715,13 @@ class Listas:
         
     def Forca_Focus(self):
         """
-        Força o focus na janela etiquetas
+        Forï¿½a o focus na janela etiquetas
         """
         self.janelaetiquetas.focus_set()
         
     def FechaJanela(self):
-        print self.janelaetiquetas.geometry()
-        if tkMessageBox.askokcancel("Exit?", "Você tem certeza que deseja fechar?"):
+        print (self.janelaetiquetas.geometry())
+        if tkMessageBox.askokcancel("Exit?", "Vocï¿½ tem certeza que deseja fechar?"):
             self.janelaetiquetas.destroy()
             self.janelaetiquetas = None
             
@@ -741,11 +741,11 @@ class Listas:
             
             texto = self.jnetdescricao.get()
             self.jnetcodproduto.delete(0,END)
-            # Caso seja seta para cima ou para baixo não entra 
+            # Caso seja seta para cima ou para baixo nï¿½o entra 
             if (event.keycode != 38) and (event.keycode != 40):
                 
                 
-                if texto != "": # Texto vazio não faz nada
+                if texto != "": # Texto vazio nï¿½o faz nada
                     # Apaga toda a treeview para ser inserida uma nova
                     x = self.jnettreeview.get_children() 
                     for item in x: 
@@ -760,9 +760,9 @@ class Listas:
                         self.cadastraListaProdutos(prod,self.jnettreeview)
                         
                     else:                        
-                        # Criando a expresão regular para a pesquisa
+                        # Criando a expresï¿½o regular para a pesquisa
                         regex = ''
-                        # Explodindo texto para fazer a pesquisa por expresão regular
+                        # Explodindo texto para fazer a pesquisa por expresï¿½o regular
                         textoSplit = texto.split()
                         for te in textoSplit:
                                 regex += '(.*)'+te
@@ -800,9 +800,9 @@ class Listas:
         elif event.widget._name == "jnetcodprod": # Codigo do produto
             texto = self.jnetcodproduto.get()
             self.jnetdescricao.delete(0,END)
-            # Caso seja seta para cima ou para baixo não entra 
+            # Caso seja seta para cima ou para baixo nï¿½o entra 
             if (event.keycode != 38) and (event.keycode != 40):
-                if texto != "": # Texto vazio não faz nada
+                if texto != "": # Texto vazio nï¿½o faz nada
                     # Apaga toda a treeview para ser inserida uma nova
                     x = self.jnettreeview.get_children() 
                     for item in x: 
@@ -860,7 +860,7 @@ class Listas:
         item = self.jnettreeview.item(self.jnettreeview.selection())
         
         valores = item.values()
-        # Verifica se dados não estão vazio
+        # Verifica se dados nï¿½o estï¿½o vazio
         if valores[2] != '':
             novoValor = (valores[2][0], valores[2][1], valores[2][2], valores[2][3])
             self.produtosselecionados.adicionaProdutos(valores[2][0],valores[2][1], valores[2][2], valores[2][3])
@@ -880,7 +880,7 @@ class Listas:
         data = [(tree.set(child, col), child) for child in tree.get_children('')]
     
         # reorder data
-        print "Tipo: ", type(data)
+        print ("Tipo: ", type(data))
         data.sort(reverse=descending)
         for indx, item in enumerate(data):
             tree.move(item[1], '', indx)
@@ -900,7 +900,7 @@ class Listas:
         
         if fileName:
             tipo = fileName.split(".")
-            # Forçando para ser um arquivo .csv
+            # Forï¿½ando para ser um arquivo .csv
             if tipo[-1] != "pdf":
                 fileName += ".pdf"
                 
@@ -933,7 +933,7 @@ class Listas:
 
 class JanelaRaiz:
     """
-    Classe com as principais funções de gerar a janela raiz do sistema.
+    Classe com as principais funï¿½ï¿½es de gerar a janela raiz do sistema.
     """
     def __init__(self):
         
@@ -944,11 +944,11 @@ class JanelaRaiz:
             self.janelaraiz.iconbitmap(default='icon.ico')
         self.janelaraiz.title('ScanWalker - Controle de estoque')
         self.janelaraiz.resizable(FALSE,FALSE)
-        self.janelaraiz.protocol("WM_DELETE_WINDOW",self.FechaJanela)  # Colocando a função de fechar a janela
+        self.janelaraiz.protocol("WM_DELETE_WINDOW",self.FechaJanela)  # Colocando a funï¿½ï¿½o de fechar a janela
         
         
     def FechaJanela(self):
-        if tkMessageBox.askokcancel("Exit?", "Você tem certeza que deseja fechar?"):
+        if tkMessageBox.askokcancel("Exit?", "Vocï¿½ tem certeza que deseja fechar?"):
             self.janelaraiz.destroy()
             self.janelaraiz = None
         else:
@@ -956,7 +956,7 @@ class JanelaRaiz:
             
     def Forca_Focus(self):
         """
-        Força o focus na janela etiquetas
+        Forï¿½a o focus na janela etiquetas
         """
         self.janelaraiz.focus_set()
         
@@ -967,7 +967,7 @@ class JanelaRaiz:
         """
         
         
-        imgetiquetas = PhotoImage(file="iconImpressaoEtiquetas.gif") # imagem do botão gera etiquetas
+        imgetiquetas = PhotoImage(file="iconImpressaoEtiquetas.gif") # imagem do botï¿½o gera etiquetas
         
         btngeraretiqueta = Button(
             self.janelaraiz,
@@ -980,9 +980,9 @@ class JanelaRaiz:
             )
         btngeraretiqueta.grid(column=0, row=0, padx=2, pady=2)
         
-        btngeraretiqueta.image = imgetiquetas # salvando a imagem no botão para o garbage collection???
+        btngeraretiqueta.image = imgetiquetas # salvando a imagem no botï¿½o para o garbage collection???
         
-        imgctlestoque = PhotoImage(file="iconControlEstoque.gif") # imagem do botão gera etiquetas
+        imgctlestoque = PhotoImage(file="iconControlEstoque.gif") # imagem do botï¿½o gera etiquetas
         
         btnctlestoque = Button(
             self.janelaraiz,
@@ -995,10 +995,10 @@ class JanelaRaiz:
             )
         btnctlestoque.grid(column=1, row=0, padx=2, pady=2)
         
-        btnctlestoque.image = imgctlestoque # salvando a imagem no botão para o garbage collection???
+        btnctlestoque.image = imgctlestoque # salvando a imagem no botï¿½o para o garbage collection???
         
         
-        imgCodBarrasUp = PhotoImage(file="database_up.gif") # imagem do botão gera etiquetas
+        imgCodBarrasUp = PhotoImage(file="database_up.gif") # imagem do botï¿½o gera etiquetas
         btnCodBarrasUp = Button(
             self.janelaraiz,
             compound=TOP,
@@ -1010,10 +1010,10 @@ class JanelaRaiz:
             )
         btnCodBarrasUp.grid(column=2, row=0, padx=2, pady=2)
         
-        btnCodBarrasUp.image = imgCodBarrasUp # salvando a imagem no botão para o garbage collection???
+        btnCodBarrasUp.image = imgCodBarrasUp # salvando a imagem no botï¿½o para o garbage collection???
         
         #
-        imgGeraLista = PhotoImage(file="document-print.gif") # imagem do botão gera etiquetas
+        imgGeraLista = PhotoImage(file="document-print.gif") # imagem do botï¿½o gera etiquetas
         btnGeraLista = Button(
             self.janelaraiz,
             compound=TOP,
@@ -1025,7 +1025,7 @@ class JanelaRaiz:
             )
         btnGeraLista.grid(column=3, row=0, padx=2, pady=2)
         
-        btnGeraLista.image = imgGeraLista # salvando a imagem no botão para o garbage collection???
+        btnGeraLista.image = imgGeraLista # salvando a imagem no botï¿½o para o garbage collection???
         
         
         
@@ -1111,11 +1111,11 @@ class JanelaCTLEstoque:
         self.janelactlestoque = Toplevel()
         self.janelactlestoque.title("Controle de Estoque")
         #self.janelactlestoque.resizable(FALSE,FALSE)
-        self.janelactlestoque.protocol("WM_DELETE_WINDOW",self.FechaJanela)  # Colocando a função de fechar a janela
+        self.janelactlestoque.protocol("WM_DELETE_WINDOW",self.FechaJanela)  # Colocando a funï¿½ï¿½o de fechar a janela
         #self.janelaetiquetas.focus_set()
         self.Forca_Focus()
         
-        # Pegando posição da janela raiz e da toplevel
+        # Pegando posiï¿½ï¿½o da janela raiz e da toplevel
         #possjnEtiq =  self.jnEtiquetas.geometry().split('+')
         possRaiz = janelaraiz.geometry().split('+')       
         possjnctlestoque = str("770x330") + "+" + str(possRaiz[1]) + "+" + str(int(possRaiz[-1])+int(possRaiz[0].split('x')[1])+70)
@@ -1176,7 +1176,7 @@ class JanelaCTLEstoque:
         # Criando labels para total de pagianas
         Label(self.janelactlestoque, text="Total de Itens", font=("Helvetica", 10)).grid(row=12, column=0, sticky=W)
         Label(self.janelactlestoque, text="Novos Cadastros ", font=("Helvetica", 10)).grid(row=12, column=1, sticky=W)
-        Label(self.janelactlestoque, text="Produtos já Cadastrados ", font=("Helvetica", 10)).grid(row=12, column=2, sticky=W)
+        Label(self.janelactlestoque, text="Produtos jï¿½ Cadastrados ", font=("Helvetica", 10)).grid(row=12, column=2, sticky=W)
         Label(self.janelactlestoque, text="Total de Produtos contado ", font=("Helvetica", 10)).grid(row=12, column=3, sticky=W)
         
         
@@ -1213,18 +1213,18 @@ class JanelaCTLEstoque:
         """
         Usada para importar dados que foram cadastrados anteriormente.
         """
-        print "importar"
+        print ("importar")
         tipo = ""
         fileName = askopenfilename(filetypes=[('CSV Files','*.csv')])
         tipo = fileName.split(".")
         
-        # Forçando para ser um arquivo .csv
+        # Forï¿½ando para ser um arquivo .csv
         if tipo[-1] != "csv":
             fileName += ".csv"
             
         try:
             arq = csv.reader(open(fileName), delimiter='\t')
-            print "Arquivo aberto"
+            print ("Arquivo aberto")
             for [COD_PROD, DESCRICAO, COD_BARRAS, SALDO] in arq:
                 
                 if self.listaprodutoscont.adicionaProdutos(COD_PROD.decode("utf-8"), DESCRICAO.decode("utf-8"), COD_BARRAS.decode("utf-8"), int(SALDO)):
@@ -1233,12 +1233,12 @@ class JanelaCTLEstoque:
                     self.listadeprodutos.AlteraProduto(produto2)
                     pass
                 else:
-                    print "Falha ao adicionar o produto: ",  DESCRICAO
+                    print ("Falha ao adicionar o produto: ",  DESCRICAO)
         except:
-            print "Error"
+            print ("Error")
         finally:
             
-            print "Produtos adicionados com sucesso"
+            print ("Produtos adicionados com sucesso")
             apagaTreeView(self.jnctltreeview)
             self.cadastraListaProdutos(self.listaprodutoscont, self.jnctltreeview)
             self.Forca_Focus(event="codbarras")
@@ -1258,7 +1258,7 @@ class JanelaCTLEstoque:
         item = self.jnctltreeview.item(self.jnctltreeview.selection())
         
         valores = item.values()
-        print valores
+        print (valores)
         if valores[2] != '':      
         
             self.alteraqtdproduto = JanelaProduto(magicnumber=8)
@@ -1271,7 +1271,7 @@ class JanelaCTLEstoque:
             if self.alteraqtdproduto.cancela is False :
                 novoProd = self.alteraqtdproduto.get()
                 prod = Produto(cod_produto=str(novoProd[0]), descricao=str(novoProd[1]), cod_barras=str(novoProd[2]), saldo_estoque=int(novoProd[3]))
-                print "Pord: ", prod
+                print ("Pord: ", prod)
                 if prod.saldo_estoque <= 0:
                     
                     self.listaprodutoscont.RemoveProduto(prod, confirmar=False)
@@ -1289,7 +1289,7 @@ class JanelaCTLEstoque:
         # Coloca dados na tabela
         #print "Tamanho", len(listaProdutos)
         if listaProdutos == []:
-            print "Lista Vazia"
+            print ("Lista Vazia")
             #######TODO:XXX Aqui
         else:
             x = []
@@ -1331,13 +1331,13 @@ class JanelaCTLEstoque:
         treeV.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
         treeV.grid(column=numcolunas, row=numlinhas, sticky='nsew')
         
-        # a possição da barra de rolagem recebe a possição inicial do grid + o seu tamanho mais 1
+        # a possiï¿½ï¿½o da barra de rolagem recebe a possiï¿½ï¿½o inicial do grid + o seu tamanho mais 1
         # Tanto para a linha como para a coluna
         #vsb.grid(column=pcolum, row=numlinhas, sticky='ns')
         vsb.grid(column=pcolum, row=numlinhas, sticky='ns', rowspan=rowspan)
         hsb.grid(column=numcolunas, row=plinhas, sticky='ew', columnspan=columnspan)
         
-        # Coloca titulos nas colunas, falta criar funçao de ordenação
+        # Coloca titulos nas colunas, falta criar funï¿½ao de ordenaï¿½ï¿½o
         for col in colunas:
                 treeV.heading(col, text=col.title(),
                     command=lambda c=col: self.sortby(treeV, c, 0))
@@ -1351,7 +1351,7 @@ class JanelaCTLEstoque:
         
         
     def FechaJanela(self):
-        if tkMessageBox.askokcancel("Exit?", "Você tem certeza que deseja fechar?"):
+        if tkMessageBox.askokcancel("Exit?", "Vocï¿½ tem certeza que deseja fechar?"):
             self.janelactlestoque.destroy()
             self.janelactlestoque = None
         else:
@@ -1396,9 +1396,9 @@ class JanelaCTLEstoque:
                         apagaTreeView(self.jnctltreeview)
                         self.cadastraListaProdutos(self.listaprodutoscont, self.jnctltreeview)
                     else:
-                        # Codigo de Barras lido ainda não foi cadastrado
+                        # Codigo de Barras lido ainda nï¿½o foi cadastrado
                         self.alerta.bepp()
-                        if tkMessageBox.askokcancel("Atenção", "Produto não cadastrado, deseja cadastra-lo?"):
+                        if tkMessageBox.askokcancel("Atenï¿½ï¿½o", "Produto nï¿½o cadastrado, deseja cadastra-lo?"):
                             # Abrindo janela para alt
                             
                             self.alteracodpoduto = JanelaAlteraProduto(self.janelaraiz, codDig)
@@ -1407,21 +1407,21 @@ class JanelaCTLEstoque:
                             
                             
                         else:
-                            print "Não adicionar"
+                            print ("NÃ£o adicionar")
                         
                     
                 else:
                     self.alerta.bepp()
                     tkMessageBox.showinfo(
-                        title="Atenção",
-                        message="O Cod. de Barras lido é invalido!"
+                        title="AtenÃ§Ã£o",
+                        message="O Cod. de Barras lido Ã© invalido!"
                         )
                 
             else:
                 self.alerta.bepp()
                 tkMessageBox.showinfo(
-                        title="Atenção",
-                        message="O Cod. de Barras lido é invalido!"
+                        title="AtenÃ§Ã£o",
+                        message="O Cod. de Barras lido Ã© invalido!"
                         )
             #self.listadeprodutos
             #self.listaprodutoscont
@@ -1437,7 +1437,7 @@ class JanelaCTLEstoque:
         
     def Forca_Focus(self, event=None):
         """
-        Força o focus na janela etiquetas
+        ForÃ§a o focus na janela etiquetas
         """
         
         if event is None :
@@ -1447,7 +1447,7 @@ class JanelaCTLEstoque:
         elif event.widget._name == "saldo":
             self.jnctlcodbarra.focus_force()
         else:
-            print "Evento ", event.widget._name
+            print ("Evento ", event.widget._name)
             
     def salvar(self):
         """
@@ -1456,7 +1456,7 @@ class JanelaCTLEstoque:
         tipo = ""
         fileName = asksaveasfilename(filetypes=[('CSV Files','*.csv')])
         tipo = fileName.split(".")
-        # Forçando para ser um arquivo .csv
+        # Forï¿½ando para ser um arquivo .csv
         if tipo[-1] != "csv":
             fileName += ".csv"
         
@@ -1476,9 +1476,9 @@ class JanelaCTLEstoque:
             #textoutput = self.text.get(0.0, END)
             #file.write(textoutput)
         except:
-            print "Error"
+            print ("Error")
         finally:
-            print "Dados salvo com sucesso"
+            print ("Dados salvo com sucesso")
             #for prod in self.listaProdutosJanela.produtos:
             #    print prod.cod_produto, " " ,prod.descricao, " " ,prod.cod_barras, " " ,prod.saldo_estoque
             arq.close()
@@ -1517,11 +1517,11 @@ class JanelaAlteraProduto:
         self.janela = Toplevel()
         self.janela.title("Cadastrar Codigo de Barras")
         self.janela.resizable(FALSE,FALSE)
-        self.janela.protocol("WM_DELETE_WINDOW",self.FechaJanela)  # Colocando a função de fechar a janela
+        self.janela.protocol("WM_DELETE_WINDOW",self.FechaJanela)  # Colocando a funï¿½ï¿½o de fechar a janela
         #self.janelaetiquetas.focus_set()
         self.Forca_Focus()
         
-        # Pegando posição da janela raiz e da toplevel
+        # Pegando posiï¿½ï¿½o da janela raiz e da toplevel
         #possjnEtiq =  self.jnEtiquetas.geometry().split('+')
         
         possRaiz = self.janelaraiz.geometry().split('+')       
@@ -1545,8 +1545,8 @@ class JanelaAlteraProduto:
         # Setando o evento do teclado para a descricao, quando qualwuer tecla for presionada chamda filtraProdutos
         self.codproduto.bind("<KeyRelease>", self.filtraProdutos)
         
-        # Descricão
-        Label(self.janela, text="Descrição").grid(row=0, column=2)
+        # Descricï¿½o
+        Label(self.janela, text="Descriï¿½ï¿½o").grid(row=0, column=2)
         self.descricao = Entry(self.janela, name="descricao")
         self.descricao["width"] = 50
         self.descricao.grid(row=0, column=3)
@@ -1621,7 +1621,7 @@ class JanelaAlteraProduto:
         """
         novoProd = []
         while True:
-            print "Abrindo "
+            print ("Abrindo ")
             self.janelaNovoProd = JanelaProduto(magicnumber=6)
             self.janelaNovoProd.acodbarraprod.set(self.novoCodBarras)
             if novoProd:
@@ -1636,8 +1636,8 @@ class JanelaAlteraProduto:
                 for i in self.listadeprodutos.produtos:
                     if i.descricao == prod.descricao:
                         tkMessageBox.showinfo(
-                            title="Atenção",
-                            message="Já existe um produto com este nome!"
+                            title="Atenï¿½ï¿½o",
+                            message="Jï¿½ existe um produto com este nome!"
                             )
                         aux = False
                         break
@@ -1660,7 +1660,7 @@ class JanelaAlteraProduto:
         # Coloca dados na tabela
         #print "Tamanho", len(listaProdutos)
         if listaProdutos == []:
-            print "Lista Vazia"
+            print ("Lista Vazia")
             self.labelTotEtiq.set("0")
             self.labelTotPag.set("0")
             #######TODO:XXX Aqui
@@ -1712,12 +1712,12 @@ class JanelaAlteraProduto:
         treeV.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
         treeV.grid(column=numcolunas, row=numlinhas, sticky='nsew')
         
-        # a possição da barra de rolagem recebe a possição inicial do grid + o seu tamanho mais 1
+        # a possiï¿½ï¿½o da barra de rolagem recebe a possiï¿½ï¿½o inicial do grid + o seu tamanho mais 1
         # Tanto para a linha como para a coluna
         vsb.grid(column=pcolum, row=numlinhas, sticky='ns', rowspan=rowspan)
         hsb.grid(column=numcolunas, row=plinhas, sticky='ew', columnspan=columnspan)
         
-        # Coloca titulos nas colunas, falta criar funçao de ordenação
+        # Coloca titulos nas colunas, falta criar funï¿½ao de ordenaï¿½ï¿½o
         for col in colunas:
                 treeV.heading(col, text=col.title(),
                     command=lambda c=col: self.sortby(treeV, c, 0))
@@ -1729,7 +1729,7 @@ class JanelaAlteraProduto:
         return treeV
     
     def FechaJanela(self):
-        if tkMessageBox.askokcancel("Exit?", "Você tem certeza que deseja fechar?"):
+        if tkMessageBox.askokcancel("Exit?", "Vocï¿½ tem certeza que deseja fechar?"):
             self.janela.destroy()
             self.janela = None
         else:
@@ -1752,11 +1752,11 @@ class JanelaAlteraProduto:
             texto = self.descricao.get()
             self.codproduto.delete(0, END)
             
-            # Caso seja seta para cima ou para baixo não entra 
+            # Caso seja seta para cima ou para baixo nï¿½o entra 
             if (event.keycode != 116) and (event.keycode != 111):
-                print "Keycode: ", event.keycode, " Name: ", event.widget._name
+                print ("Keycode: ", event.keycode, " Name: ", event.widget._name)
                 
-                if texto != "": # Texto vazio não faz nada
+                if texto != "": # Texto vazio nï¿½o faz nada
                     # Apaga toda a treeview para ser inserida uma nova
                     x = self.treeview.get_children() 
                     for item in x: 
@@ -1771,9 +1771,9 @@ class JanelaAlteraProduto:
                         self.cadastraListaProdutos(prod,self.treeview)
                         
                     else:                        
-                        # Criando a expresão regular para a pesquisa
+                        # Criando a expresï¿½o regular para a pesquisa
                         regex = ''
-                        # Explodindo texto para fazer a pesquisa por expresão regular
+                        # Explodindo texto para fazer a pesquisa por expresï¿½o regular
                         textoSplit = texto.split()
                         for te in textoSplit:
                                 regex += '(.*)'+te
@@ -1816,9 +1816,9 @@ class JanelaAlteraProduto:
             texto =  self.codproduto.get()
             self.descricao.delete(0,END)
             
-            # Caso seja seta para cima ou para baixo não entra 
+            # Caso seja seta para cima ou para baixo nï¿½o entra 
             if (event.keycode != 116) and (event.keycode != 111):
-                if texto != "": # Texto vazio não faz nada
+                if texto != "": # Texto vazio nï¿½o faz nada
                     # Apaga toda a treeview para ser inserida uma nova
                     x = self.treeview.get_children() 
                     for item in x: 
@@ -1858,7 +1858,7 @@ class JanelaAlteraProduto:
             
     def Forca_Focus(self):
         """
-        Força o focus na janela etiquetas
+        Forï¿½a o focus na janela etiquetas
         """
         
         self.janela.focus_set()
@@ -1871,7 +1871,7 @@ class JanelaAlteraProduto:
         """
         if event.widget._name[0] == "treeview":
             if event.keycode != 116 and event.keycode != 111:
-                # Forçando o focus na descricao
+                # Forï¿½ando o focus na descricao
                 self.descricao.delete(0, END)
                 self.descricao.insert(0, event.char.upper())
                 self.descricao.focus_force()
@@ -1886,12 +1886,12 @@ class JanelaAlteraProduto:
         
         
         valores = item.values()
-        # Verifica se dados não estão vazio
+        # Verifica se dados nï¿½o estï¿½o vazio
         if valores[2] != '':
             if tkMessageBox.askokcancel("Alterar Codigo de Barras?", "Deseja vincular o cod. barras " \
                                         + str(self.novoCodBarras) + " \n ao produto " + str(valores[2][1].encode("utf-8"))):
                 prod = Produto(valores[2][0], valores[2][1], self.novoCodBarras, valores[2][3])
-                print "Prod: ", prod.cod_produto, ", ", prod.descricao
+                print ("Prod: ", prod.cod_produto, ", ", prod.descricao)
                 self.listadeprodutos.AlteraProduto(prod)
                 
                 # Apaga toda a treeview para ser inserida uma nova
@@ -1926,13 +1926,13 @@ class JanelaAlteraProduto:
     
 class JanelaProduto:
     """
-    Classe responsavel por gerar as janela de exibição e alteração de produto
+    Classe responsavel por gerar as janela de exibiï¿½ï¿½o e alteraï¿½ï¿½o de produto
     """
     
     def __init__(self, magicnumber=15):
         """
         Recebe como parametro o 'magic number', este numero representa qual campo esta disponivel para
-        edição. Por padrão todos os campos estão disponiveis, magicnumber=15.
+        ediï¿½ï¿½o. Por padrï¿½o todos os campos estï¿½o disponiveis, magicnumber=15.
         1 = Cod. Produto pode ser editado
         2 = Cod. Baras pode ser editado
         4 = Descricao pode ser editado
@@ -1944,7 +1944,7 @@ class JanelaProduto:
         
         self.magicnumber = magicnumber
         
-        self.cancela = False  # Usado quando a foi fechado sem salvar ou o botão cancelar foi apertado
+        self.cancela = False  # Usado quando a foi fechado sem salvar ou o botï¿½o cancelar foi apertado
         #Pega valores do item
         #item = self.tree.item(self.tree.selection())
         
@@ -1973,12 +1973,12 @@ class JanelaProduto:
             
             
             Label(self.alteraJn, text="Cod. Produto").grid(row=0)
-            self.alteraJn.protocol("WM_DELETE_WINDOW",self.FechaJanela)  # Colocando a função de fechar a janela
+            self.alteraJn.protocol("WM_DELETE_WINDOW",self.FechaJanela)  # Colocando a funï¿½ï¿½o de fechar a janela
             self.eCodProd = Entry(self.alteraJn, textvariable=self.acodprod)
             self.eCodProd.grid(row=0, column=1)
             #self.eCodProd.bind("<Return>", self.salvaNovaQtd)
             
-            # Forçando o focus na janela, e bloqueando nela
+            # Forï¿½ando o focus na janela, e bloqueando nela
             self.alteraJn.grab_set()            
             self.alteraJn.focus_set()
             
@@ -2006,13 +2006,13 @@ class JanelaProduto:
                                   command=self.FechaJanela)
             self.eBtnCancelar.grid(row=3, column=2, columnspan=2)
             
-            self.alteraJn.resizable(FALSE,FALSE)  # Bloqueando alteração de tamanho
+            self.alteraJn.resizable(FALSE,FALSE)  # Bloqueando alteraï¿½ï¿½o de tamanho
             self.CalculaMagicNumber()
             
     def CalculaMagicNumber(self):
         """
-        Leva em conta o magic number passado na inicialização para tornanr os campos editaveis ou não.
-        Utiliza alteração de focus para fazer o entry não ser editavel
+        Leva em conta o magic number passado na inicializaï¿½ï¿½o para tornanr os campos editaveis ou nï¿½o.
+        Utiliza alteraï¿½ï¿½o de focus para fazer o entry nï¿½o ser editavel
         """
         #self.magicnumber = 14
         resto = int(self.magicnumber)
@@ -2032,7 +2032,7 @@ class JanelaProduto:
             if (int(resto)/1 == 1):
                 print "Cod. Produtos e editavel"
              """ 
-            # Retira focus caso não seja editavel
+            # Retira focus caso nï¿½o seja editavel
             
             if (int(resto)/8 != 1):
                 self.eQtd.bind("<FocusIn>", self.ForcaFocusSalvar)
@@ -2047,7 +2047,7 @@ class JanelaProduto:
                 self.eCodProd.bind("<FocusIn>", self.ForcaFocusSalvar)
             
     def FechaJanela(self):
-        if tkMessageBox.askokcancel("Exit?", "Você tem certeza que deseja fechar?"):
+        if tkMessageBox.askokcancel("Exit?", "Vocï¿½ tem certeza que deseja fechar?"):
             self.cancela = True
             self.alteraJn.destroy()
             self.alteraJn = None
@@ -2056,7 +2056,7 @@ class JanelaProduto:
             
     def Forca_Focus(self):
         """
-        Força o focus na janela etiquetas
+        Forï¿½a o focus na janela etiquetas
         """
         self.alteraJn.focus_set()
         self.alteraJn.grab_set()            
@@ -2064,7 +2064,7 @@ class JanelaProduto:
         
     def ForcaFocusSalvar(self, event):
         """
-        Força o focus no botão salvar
+        Forï¿½a o focus no botï¿½o salvar
         """
         #print "chegou"
         #self.alteraJn.focus_get().focus_force()
@@ -2072,7 +2072,7 @@ class JanelaProduto:
         
     def get(self):
         """
-        Retorna os valores alterados na janela de alteração.
+        Retorna os valores alterados na janela de alteraï¿½ï¿½o.
         """
         return (self.acodprod.get(), self.adescprod.get(), self.acodbarraprod.get(), self.aqtdprod.get())
         
@@ -2083,7 +2083,7 @@ class JanelaProduto:
         
     def set(self, codprod, descricao, codbarras, qtd):
         """
-        Coloca as informações na tela
+        Coloca as informaï¿½ï¿½es na tela
         """
         self.acodprod.set(codprod)
         self.adescprod.set(descricao)
@@ -2098,7 +2098,7 @@ class JanelaProduto:
         ws = raiz.winfo_screenwidth()
         hs = raiz.winfo_screenheight()
         
-        # Calculando posição x, y
+        # Calculando posiï¿½ï¿½o x, y
         x = (ws/2)-(w/2)
         y = (hs/2)-(h/2)
         
@@ -2135,13 +2135,13 @@ class JanelaEtiquetas:
         
         # Criando Janela TopLevel
         self.janelaetiquetas = Toplevel()
-        self.janelaetiquetas.title("Impressão de Etiquetas")
+        self.janelaetiquetas.title("Impressï¿½o de Etiquetas")
         self.janelaetiquetas.resizable(FALSE,FALSE)
-        self.janelaetiquetas.protocol("WM_DELETE_WINDOW",self.FechaJanela)  # Colocando a função de fechar a janela
+        self.janelaetiquetas.protocol("WM_DELETE_WINDOW",self.FechaJanela)  # Colocando a funï¿½ï¿½o de fechar a janela
         #self.janelaetiquetas.focus_set()
         self.Forca_Focus()
         
-        # Pegando posição da janela raiz e da toplevel
+        # Pegando posiï¿½ï¿½o da janela raiz e da toplevel
         #possjnEtiq =  self.jnEtiquetas.geometry().split('+')
         possRaiz = self.janelaraiz.geometry().split('+')       
         possjnEtiquetas = str("970x590") + "+" + str(possRaiz[1]) + "+" + str(int(possRaiz[-1])+int(possRaiz[0].split('x')[1])+50)
@@ -2164,8 +2164,8 @@ class JanelaEtiquetas:
         # Setando o evento do teclado para a descricao, quando qualwuer tecla for presionada chamda filtraProdutos
         self.jnetcodproduto.bind("<KeyRelease>", self.filtraProdutos)
         
-        # Descricão
-        Label(self.janelaetiquetas, text="Descrição").grid(row=0, column=2)
+        # Descricï¿½o
+        Label(self.janelaetiquetas, text="Descriï¿½ï¿½o").grid(row=0, column=2)
         self.jnetdescricao = Entry(self.janelaetiquetas, name="jnetdescricao")
         self.jnetdescricao["width"] = 50
         self.jnetdescricao.grid(row=0, column=3)
@@ -2225,8 +2225,8 @@ class JanelaEtiquetas:
         self.jnetcodproduto2["width"] = 10
         self.jnetcodproduto2.grid(row=13, column=1)
         
-        # Descricão
-        Label(self.janelaetiquetas, text="Descrição").grid(row=13, column=2)
+        # Descricï¿½o
+        Label(self.janelaetiquetas, text="Descriï¿½ï¿½o").grid(row=13, column=2)
         self.jnetdescricao2 = Entry(self.janelaetiquetas)
         self.jnetdescricao2["width"] = 50
         self.jnetdescricao2.grid(row=13, column=3)
@@ -2307,7 +2307,7 @@ class JanelaEtiquetas:
         # Coloca dados na tabela
         #print "Tamanho", len(listaProdutos)
         if listaProdutos == []:
-            print "Lista Vazia"
+            print ("Lista Vazia")
             self.labelTotEtiq.set("0")
             self.labelTotPag.set("0")
             #######TODO:XXX Aqui
@@ -2337,7 +2337,7 @@ class JanelaEtiquetas:
         item = self.jnettreeview2.item(self.jnettreeview2.selection())
         
         valores = item.values()
-        # Verifica se dados não estão vazio
+        # Verifica se dados nï¿½o estï¿½o vazio
         if valores[2] != '':
             novoValor = (valores[2][0], valores[2][1], valores[2][2], valores[2][3])
             self.alteraqtdproduto.set(
@@ -2418,12 +2418,12 @@ class JanelaEtiquetas:
         treeV.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
         treeV.grid(column=numcolunas, row=numlinhas, sticky='nsew')
         
-        # a possição da barra de rolagem recebe a possição inicial do grid + o seu tamanho mais 1
+        # a possiï¿½ï¿½o da barra de rolagem recebe a possiï¿½ï¿½o inicial do grid + o seu tamanho mais 1
         # Tanto para a linha como para a coluna
         vsb.grid(column=pcolum, row=numlinhas, sticky='ns', rowspan=rowspan)
         hsb.grid(column=numcolunas, row=plinhas, sticky='ew', columnspan=columnspan)
         
-        # Coloca titulos nas colunas, falta criar funçao de ordenação
+        # Coloca titulos nas colunas, falta criar funï¿½ao de ordenaï¿½ï¿½o
         for col in colunas:
                 treeV.heading(col, text=col.title(),
                     command=lambda c=col: self.sortby(treeV, c, 0))
@@ -2438,10 +2438,10 @@ class JanelaEtiquetas:
         """
         Gerencia os eventos do teclado na treeview
         """
-        print "Evento do teclado: ", event.keycode
+        print ("Evento do teclado: ", event.keycode)
         if event.widget._name == "treeview":
             if event.keycode != 40 and event.keycode != 38:
-                # Forçando o focus na descricao
+                # Forï¿½ando o focus na descricao
                 
                 if event.keycode != 13:
                 
@@ -2454,12 +2454,12 @@ class JanelaEtiquetas:
         
     def Forca_Focus(self):
         """
-        Força o focus na janela etiquetas
+        Forï¿½a o focus na janela etiquetas
         """
         self.janelaetiquetas.focus_set()
         
     def FechaJanela(self):
-        if tkMessageBox.askokcancel("Exit?", "Você tem certeza que deseja fechar?"):
+        if tkMessageBox.askokcancel("Exit?", "Vocï¿½ tem certeza que deseja fechar?"):
             self.janelaetiquetas.destroy()
             self.janelaetiquetas = None
             
@@ -2479,11 +2479,11 @@ class JanelaEtiquetas:
             
             texto = self.jnetdescricao.get()
             
-            # Caso seja seta para cima ou para baixo não entra 
+            # Caso seja seta para cima ou para baixo nï¿½o entra 
             if (event.keycode != 38) and (event.keycode != 40):
                 
                 
-                if texto != "": # Texto vazio não faz nada
+                if texto != "": # Texto vazio nï¿½o faz nada
                     # Apaga toda a treeview para ser inserida uma nova
                     x = self.jnettreeview.get_children() 
                     for item in x: 
@@ -2498,9 +2498,9 @@ class JanelaEtiquetas:
                         self.cadastraListaProdutos(prod,self.jnettreeview)
                         
                     else:                        
-                        # Criando a expresão regular para a pesquisa
+                        # Criando a expresï¿½o regular para a pesquisa
                         regex = ''
-                        # Explodindo texto para fazer a pesquisa por expresão regular
+                        # Explodindo texto para fazer a pesquisa por expresï¿½o regular
                         textoSplit = texto.split()
                         for te in textoSplit:
                                 regex += '(.*)'+te
@@ -2538,9 +2538,9 @@ class JanelaEtiquetas:
         elif event.widget._name == "jnetcodprod": # Codigo do produto
             texto = self.jnetcodproduto.get()
             
-            # Caso seja seta para cima ou para baixo não entra 
+            # Caso seja seta para cima ou para baixo nï¿½o entra 
             if (event.keycode != 38) and (event.keycode != 40):
-                if texto != "": # Texto vazio não faz nada
+                if texto != "": # Texto vazio nï¿½o faz nada
                     # Apaga toda a treeview para ser inserida uma nova
                     x = self.jnettreeview.get_children() 
                     for item in x: 
@@ -2579,7 +2579,7 @@ class JanelaEtiquetas:
             
     def GerarEtiquetas(self):
         """
-        Chama a função para gerar o pdf com as etiquetas passadas.
+        Chama a funï¿½ï¿½o para gerar o pdf com as etiquetas passadas.
         """
         
         if self.produtosselecionados.ContaTotalProdutos() > 0:
@@ -2599,14 +2599,14 @@ class JanelaEtiquetas:
                         bar.getImage(EAN13,50,"png")
                     else:
                         tkMessageBox.showinfo(
-                            title="Atenção",
+                            title="Atenï¿½ï¿½o",
                             message="Agum o produto " + prod.descricao + " esta com Cod. de Barras invalido!"
                             )
                         barCodeVali = False
                         break
                 else:
                     tkMessageBox.showinfo(
-                            title="Atenção",
+                            title="Atenï¿½ï¿½o",
                             message="Agum o produto " + prod.descricao + " esta com Cod. de Barras invalido!"
                             )
                     
@@ -2626,28 +2626,28 @@ class JanelaEtiquetas:
                     tipo = ""
                     fileName = asksaveasfilename(filetypes=[('PDF Files','*.pdf')])
                     
-                    if fileName: #  Caso o botão cancelar não tenha sido selecionado, não entra
+                    if fileName: #  Caso o botï¿½o cancelar nï¿½o tenha sido selecionado, nï¿½o entra
                         tipo = fileName.split(".")
                         
-                        # Verifica se nome não esta em branco
+                        # Verifica se nome nï¿½o esta em branco
                         if tipo[0] == "":
                             continue
-                        # Forçando para ser um arquivo .csv
+                        # Forï¿½ando para ser um arquivo .csv
                         if tipo[-1] != "pdf":
                             fileName += ".pdf"
                         try:
                             temp = open(fileName, "w")
                         except:
-                            tkMessageBox.showinfo(title="Atenção", message="Arquivo em uso por outro programa ou sem permissão de alteração.\nEscolha Outro!")
+                            tkMessageBox.showinfo(title="Atenï¿½ï¿½o", message="Arquivo em uso por outro programa ou sem permissï¿½o de alteraï¿½ï¿½o.\nEscolha Outro!")
                             #print "Arquivo aberto"
                         else:
                             #print "Pode continuar"
                             temp.close()
                             etiquetasPDF = GerarEtiquetasPDF(output=str(fileName))
-                            print "Linhas: ", self.jnetlinha.get(), "Colunas: ", self.jnetcoluna.get()
+                            print ("Linhas: ", self.jnetlinha.get(), "Colunas: ", self.jnetcoluna.get())
                             if (int(self.jnetlinha.get()) > 0) and (int(self.jnetcoluna.get()) > 0) and (int(self.jnetcoluna.get()) <= 3):
                                 
-                                print "Linhas: ", self.jnetlinha.get(), "Colunas: ", self.jnetcoluna.get()
+                                print ("Linhas: ", self.jnetlinha.get(), "Colunas: ", self.jnetcoluna.get())
                             
                                 qtdpre =  ( int(self.jnetlinha.get())*3 ) - ( 3 - int(self.jnetcoluna.get()) )
                                 
@@ -2663,7 +2663,7 @@ class JanelaEtiquetas:
                                 
                             etiquetasPDF.FinalizaPDF()
                             
-                            tkMessageBox.showinfo(title="Parabens", message="Geração de Etiquetas realizada com sucesso!")
+                            tkMessageBox.showinfo(title="Parabens", message="Geraï¿½ï¿½o de Etiquetas realizada com sucesso!")
                             apagaTreeView(self.jnettreeview2)
                             self.produtosselecionados = listaProdutos()
                             self.jnetcoluna.delete(0, END)
@@ -2677,7 +2677,7 @@ class JanelaEtiquetas:
                         break
                 
         else:
-            tkMessageBox.showinfo(title="Atenção", message="Selecione Algum Produto!")
+            tkMessageBox.showinfo(title="Atenï¿½ï¿½o", message="Selecione Algum Produto!")
                 
          
     def SelecionaProduto(self, event):
@@ -2688,7 +2688,7 @@ class JanelaEtiquetas:
         item = self.jnettreeview.item(self.jnettreeview.selection())
         
         valores = item.values()
-        # Verifica se dados não estão vazio
+        # Verifica se dados nï¿½o estï¿½o vazio
         if valores[2] != '':
             novoValor = (valores[2][0], valores[2][1], valores[2][2], valores[2][3])
             self.produtosselecionados.adicionaProdutos(valores[2][0],valores[2][1], valores[2][2], valores[2][3])
@@ -2723,7 +2723,7 @@ class JanelaEtiquetas:
         data = [(tree.set(child, col), child) for child in tree.get_children('')]
     
         # reorder data
-        print "Tipo: ", type(data)
+        print ("Tipo: ", type(data))
         data.sort(reverse=descending)
         for indx, item in enumerate(data):
             tree.move(item[1], '', indx)
@@ -2736,7 +2736,7 @@ class JanelaEtiquetas:
 
 def main():
     '''
-    Função principal do programa
+    Funï¿½ï¿½o principal do programa
     '''
     # Usado para criar a janela
     janela = JanelaRaiz()
